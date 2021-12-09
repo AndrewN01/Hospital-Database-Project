@@ -17,7 +17,7 @@ def create():
     mycursor.execute("""CREATE TABLE admin (
                         admin_id VARCHAR(255),
                         username VARCHAR(255),
-                        password VARCHAR(255),
+                        password VARBINARY(255),
                         primary key (admin_id))""")
 
     #Database to store everything for a hospital
@@ -52,38 +52,22 @@ def create():
                         date_admitted VARCHAR(255),
                         doctor_id VARCHAR(255),
                         primary key (room_number),
-                        foreign key (patient_id) references patient(patient_id),
-                        foreign key (doctor_id) references doctor(doctor_id))""")
+                        foreign key (patient_id) references patient(patient_id) on delete set NULL,
+                        foreign key (doctor_id) references doctor(doctor_id) on delete set NULL)""")
     #record table
     mycursor.execute("""CREATE TABLE record (
                         patient_id VARCHAR(255),
+                        doctor_name VARCHAR(255),
                         record_number VARCHAR(255),
                         date_admitted VARCHAR(255),
                         date_discharged VARCHAR(255),
                         bill VARCHAR(255),
+                        paid VARCHAR(255),
                         primary key (patient_id,record_number),
                         foreign key (patient_id) references patient(patient_id) on delete cascade)""")
 
 
     
     mydb.commit()
-
-    
-    """
-    THIS IS FOR TESTING
-    mycursor.execute("insert into admins values ('1','Efren','Password')")
-    mycursor.execute("insert into admins values ('2','Efren2','Password')")
-    mycursor.execute("insert into admins values ('3','Efren3','Password')")
-    mycursor.execute("insert into admins values ('4','Efren4','Password')")
-
-    mydb.commit()
-    sql = "SELECT * FROM admins"
-    mycursor.execute(sql)
-    myresult = mycursor.fetchall()
-    #print(mycursor.rowcount)
-    for x in myresult:
-        print(x[1])
-    """
-
     mycursor.close()
     return
