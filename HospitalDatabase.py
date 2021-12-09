@@ -132,7 +132,7 @@ def loginMenu():
     passwordLabel = Label(loginFrame, text="Password: ",font=('Helvetica',12))
     passwordLabel.grid(row=4, column=0, padx=20, pady=5)
 
-    passwordEntry = Entry(loginFrame, font=('Helvetica',12))
+    passwordEntry = Entry(loginFrame, font=('Helvetica',12), show="*")
     passwordEntry.grid(row=4, column=1)
 
     #Triggers sign in button if enter key is pressed
@@ -518,6 +518,83 @@ def viewInfo():
                 insuranceIDEntry.delete(0,"end")
                 messagebox.showinfo("Success","The patient was successfully deleted from the database.")
 
+    #Function opens a window that displays the information for all patients
+    def viewall():
+        #reconnects to server
+        mydb = mysql.connector.connect(
+            host=setHost,
+            user=setUser,
+            passwd=setPasswd
+        )
+        mycursor = mydb.cursor()
+        mycursor.execute("USE hospital")
+
+        #Creates new window to display information of all patients
+        viewRoot = Tk()
+        viewRoot.title('Hospital Database - All Patients')
+        viewRoot.iconbitmap('logo.ico')
+        viewRoot.geometry("950x320" + position)
+
+        #Frame for new window
+        viewallFrame = LabelFrame(viewRoot, padx=100, pady=20,borderwidth=0,highlightthickness=0)
+        viewallFrame.grid(row = 0, column = 0, rowspan = 2, columnspan = 2, sticky=N+E+S+W)
+
+
+        #Columns displayed in table
+        columns = ('patient_id','name','dob','gender','address','disease','insurancename','insuranceID')
+
+        #Creates a treeview to display tabular data
+        tree = ttk.Treeview(viewallFrame, columns=columns, show='headings', height=12)
+
+        tree.column('patient_id',width = 70,anchor=W)
+        tree.heading('patient_id', text='Patient ID',anchor=W)
+
+        tree.column('name',width = 90,anchor=W)
+        tree.heading('name', text='Name',anchor=W)
+
+        tree.column('dob',width = 90,anchor=W)
+        tree.heading('dob', text='Date of Birth',anchor=W)
+        
+        tree.column('gender',width = 70,anchor=W)
+        tree.heading('gender', text='Gender',anchor=W)
+
+        tree.column('address',width = 90,anchor=W)
+        tree.heading('address', text='Address',anchor=W)
+
+        tree.column('disease',width = 110,anchor=W)
+        tree.heading('disease', text='Disease/Reason',anchor=W)
+
+        tree.column('insurancename',width = 130,anchor=W)
+        tree.heading('insurancename', text='Insurance Company',anchor=W)
+
+        tree.column('insuranceID',width = 110,anchor=W)
+        tree.heading('insuranceID', text='Insurance ID',anchor=W)
+
+        tree.grid(row=0, column=0, columnspan = 2, sticky=N+E+S+W)
+
+        #Adds a scrollbar 
+        scrollbar = Scrollbar(viewallFrame, orient=VERTICAL, command=tree.yview)
+        tree.configure(yscroll=scrollbar.set)
+        scrollbar.grid(row=0, column=1, sticky=N+S+E)
+
+        #Gets all patients from database
+        sql = "SELECT * FROM patient"
+        mycursor.execute(sql)
+        myresult = mycursor.fetchall()
+
+        #If no patients are found, display error.
+        if not mycursor.rowcount:
+            messagebox.showerror("Error","No patients were found in the database.")
+        #Replace tablular data with information of all patients in database
+        else:
+            for x in myresult:
+                tree.insert('', END, values=(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7]))        
+
+
+
+
+        
+        
     #Function to return to main menu            
     def back():
         searchFrame.destroy()
@@ -533,6 +610,9 @@ def viewInfo():
 
     deleteButton = Button(infoFrame, text="Delete", width=15,height=1, font=('Helvetica',18), command=delete)
     deleteButton.grid(row=11, column=1, columnspan = 1, pady=(20,0))
+
+    viewallButton = Button(infoFrame, text="View All", width=15,height=1, font=('Helvetica',18), command=viewall)
+    viewallButton.grid(row=12, column=0, columnspan = 1, pady=(20,0))
 
     backButton = Button(infoFrame, text="Back", width=15,height=1, font=('Helvetica',18), command=back)
     backButton.grid(row=12, column=1, columnspan = 1, pady=(20,0))

@@ -1,9 +1,9 @@
-Hospital Database Software
-
-This software was developed by Andrew Nelson.
+Hospital Database Software 
+developed by Andrew Nelson.
 
 To run this software, you need to install:
-- Python 3.9.9: https://www.python.org/downloads/release/python-399/
+- Python 3.9.9: https://www.python.org/downloads/release/python-399/ 
+  (Python versions 4 and above do not work with mysql connector)
 - MySQL 8.0.27: https://dev.mysql.com/downloads/windows/installer/8.0.html
 - MYSQL Connector/Python 8.0.27: https://dev.mysql.com/downloads/connector/python/
 
