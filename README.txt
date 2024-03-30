@@ -8,7 +8,7 @@ To run this software, you need to install:
 - MYSQL Connector/Python 8.0.27: https://dev.mysql.com/downloads/connector/python/
 
 The software has been coded to connect to a local instance of mysql with the
-hostname being "localhost, username being "root" and password being "password".
+hostname being "localhost", username being "root" and password being "password".
 
 If the user would want to connect this software to a different host, the mysql
 connector must be configured to the desired host information. 
